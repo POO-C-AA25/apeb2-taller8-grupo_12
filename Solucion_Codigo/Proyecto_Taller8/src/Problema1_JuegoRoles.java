@@ -15,7 +15,7 @@ public class Problema1_JuegoRoles {
         arquero = new Arquero("Larga distancia", 3, 150);
 
         
-        System.out.println("Guerrero vs Mago");
+        System.out.println("Guerrero(Atacante) vs Mago(defensor)");
         String resultado = pelear(guerrero, mago);
 
         System.out.println("\n--- RESULTADO FINAL ---");
@@ -27,7 +27,7 @@ public class Problema1_JuegoRoles {
     public static String pelear(Personaje atacante, Personaje defensor) {
         Scanner sc = new Scanner(System.in);
         char opcion = 'S';
-        String mensaje = "Ganó el " + atacante.getClass().getSimpleName();
+        String mensaje = "Ganó el atacante";
 
         do {
             boolean gana = atacante.ataque(defensor);
@@ -41,12 +41,12 @@ public class Problema1_JuegoRoles {
             if (defensor.vidas <= 0) {
                 atacante.experiencia += 1;
                 atacante.batallasGanadas += 1;
-                mensaje = "Ganó el " + atacante.getClass().getSimpleName();
+                mensaje = "Ganó el atacante";
                 break;
             } else if (atacante.vidas <= 0) {
                 defensor.experiencia += 1;
                 defensor.batallasGanadas += 1;
-                mensaje = "Ganó el " + defensor.getClass().getSimpleName();
+                mensaje = "Ganó el defensor";
                 break;
             }
 
@@ -62,12 +62,12 @@ public class Problema1_JuegoRoles {
             if (atacante.vidas <= 0) {
                 defensor.experiencia += 1;
                 defensor.batallasGanadas += 1;
-                mensaje = "Ganó el " + defensor.getClass().getSimpleName();
+                mensaje = "Ganó el defensor";
                 break;
             } else if (defensor.vidas <= 0) {
                 atacante.experiencia += 1;
                 atacante.batallasGanadas += 1;
-                mensaje = "Ganó el " + atacante.getClass().getSimpleName();
+                mensaje = "Ganó el atacante";
                 break;
             }
 

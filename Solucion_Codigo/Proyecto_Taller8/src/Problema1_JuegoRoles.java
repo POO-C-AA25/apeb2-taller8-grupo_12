@@ -14,63 +14,73 @@ public class Problema1_JuegoRoles {
         mago = new Mago("Invisible", 3, 200);
         arquero = new Arquero("Larga distancia", 3, 150);
 
-        char opcion = 'S';
-        String mensaje = "Ganó el guerrero";
         
         System.out.println("Guerrero vs Mago");
+        String resultado = pelear(guerrero, mago);
+
+        System.out.println("\n--- RESULTADO FINAL ---");
+        System.out.println("Guerrero: " + guerrero);
+        System.out.println("Mago: " + mago);
+        System.out.println("Resultado: " + resultado);
+    }
+
+    public static String pelear(Personaje atacante, Personaje defensor) {
+        Scanner sc = new Scanner(System.in);
+        char opcion = 'S';
+        String mensaje = "Ganó el " + atacante.getClass().getSimpleName();
+
         do {
-            boolean gana = guerrero.ataque(mago);
+            boolean gana = atacante.ataque(defensor);
 
             if (gana) {
-                mago.vidas -= 1;
+                defensor.vidas -= 1;
             } else {
-                guerrero.vidas -= 1;
+                atacante.vidas -= 1;
             }
 
-            if (mago.vidas <= 0) {
-                guerrero.experiencia += 1;
-                guerrero.batallasGanadas += 1;
-                mensaje = "Ganó el Guerrero";
+            if (defensor.vidas <= 0) {
+                atacante.experiencia += 1;
+                atacante.batallasGanadas += 1;
+                mensaje = "Ganó el " + atacante.getClass().getSimpleName();
                 break;
-            } else if (guerrero.vidas <= 0) {
-                mago.experiencia += 1;
-                mago.batallasGanadas += 1;
-                mensaje = "Ganó el Mago";
+            } else if (atacante.vidas <= 0) {
+                defensor.experiencia += 1;
+                defensor.batallasGanadas += 1;
+                mensaje = "Ganó el " + defensor.getClass().getSimpleName();
                 break;
             }
 
-            int defensa = guerrero.defensa(mago);
+            int defensa = atacante.defensa(defensor);
             if (defensa < 0) {
-                guerrero.defensa += defensa;
-                if (guerrero.defensa <= 0) {
-                    guerrero.vidas -= 1;
-                    guerrero.defensa = 0;
+                atacante.defensa += defensa;
+                if (atacante.defensa <= 0) {
+                    atacante.vidas -= 1;
+                    atacante.defensa = 0;
                 }
             }
 
-            if (guerrero.vidas <= 0) {
-                mago.experiencia += 1;
-                mago.batallasGanadas += 1;
-                mensaje = "Ganó el Mago";
+            if (atacante.vidas <= 0) {
+                defensor.experiencia += 1;
+                defensor.batallasGanadas += 1;
+                mensaje = "Ganó el " + defensor.getClass().getSimpleName();
                 break;
-            } else if (mago.vidas <= 0) {
-                guerrero.experiencia += 1;
-                guerrero.batallasGanadas += 1;
-                mensaje = "Ganó el Guerrero";
+            } else if (defensor.vidas <= 0) {
+                atacante.experiencia += 1;
+                atacante.batallasGanadas += 1;
+                mensaje = "Ganó el " + atacante.getClass().getSimpleName();
                 break;
-            }            
+            }
+
             System.out.println("Ataque y defensa hechos");
             System.out.print("¿Desea seguir haciéndolos competir? (S/N): ");
             opcion = sc.nextLine().toUpperCase().charAt(0);
 
         } while (opcion == 'S');
 
-        System.out.println("\n--- RESULTADO FINAL ---");
-        System.out.println("Guerrero: " + guerrero);
-        System.out.println("Mago: " + mago);
-        System.out.println("Resultado: " + mensaje);
+        return mensaje;
     }
 }
+
 
 abstract class Personaje {
     public int vidas;

@@ -1,7 +1,34 @@
 import java.util.Scanner;
 
 /**
- *
+ * Problema 1 - Juego de roles
+ * En un juego de rol, se desea implementar un sistema de combate en el que
+ * participen diferentes tipos de personajes: guerreros, magos y arqueros. 
+ * Cada personaje tiene atributos y habilidades únicas, así como diferentes métodos de ataque y defensa.
+
+* El objetivo del juego es enfrentar a los personajes en batallas y determinar 
+* el ganador en función de sus habilidades, estrategias y atributos. Los guerreros 
+* se destacan por su fuerza y habilidades cuerpo a cuerpo, los magos por sus hechizos 
+* y poderes mágicos, y los arqueros por su precisión y habilidades a distancia.
+
+* El sistema debe permitir crear nuevos personajes de cada tipo, asignarles 
+* atributos iniciales, como puntos de vida y nivel de experiencia, y permitirles 
+* subir de nivel a medida que ganan batallas. Además, se debe implementar un algoritmo 
+* de combate que evalúe las habilidades de cada personaje y determine el resultado de la batalla.
+
+* Utilizando programación orientada a objetos, herencia y polimorfismo, implementa 
+* el sistema de combate y las clases necesarias para representar a los diferentes 
+* tipos de personajes. Asegúrate de que cada tipo de personaje tenga sus propias 
+* habilidades y métodos de ataque y defensa, y que puedan interactuar entre sí en las batallas.
+
+* Note
+
+* Para solucionar lo anterior se debe generar lo siguiente:
+
+* Un diagrama exclusivo que involucren las funcionalidades principales del juego.
+* Una solución en lenguaje de programación Java. Usar Polimorfismo en la solución.
+* Clase de prueba/ejecutor, que demuestre la funcionalidad del juego.
+* 
  * @author Mateo Gonzáles y Mateo Rivera
  */
 public class Problema1_JuegoRoles {
@@ -14,71 +41,107 @@ public class Problema1_JuegoRoles {
         mago = new Mago("Invisible", 3, 200);
         arquero = new Arquero("Larga distancia", 3, 150);
 
-        
         System.out.println("Guerrero(Atacante) vs Mago(defensor)");
-        String resultado = pelear(guerrero, mago);
-
+        String resultado = pelear(guerrero, mago);    
+        
         System.out.println("\n--- RESULTADO FINAL ---");
         System.out.println("Guerrero: " + guerrero);
         System.out.println("Mago: " + mago);
         System.out.println("Resultado: " + resultado);
+        
+        System.out.println("\nMago(Atacante) vs Arquero(defensor)");
+        String resultado2 = pelear(guerrero, arquero);    
+        
+        System.out.println("\n--- RESULTADO FINAL ---");
+        System.out.println("Mago: " + mago);
+        System.out.println("Arquero: " + arquero);
+        System.out.println("Resultado: " + resultado2);
     }
 
     public static String pelear(Personaje atacante, Personaje defensor) {
         Scanner sc = new Scanner(System.in);
         char opcion = 'S';
-        String mensaje = "Ganó el atacante";
+        String mensaje = "";
+
+        System.out.println("¡Comienza el combate entre Atacante y Defensor!");
+        int ronda = 1;
 
         do {
-            boolean gana = atacante.ataque(defensor);
+            System.out.println("\n--- Ronda " + ronda + " ---");
 
-            if (gana) {
-                defensor.vidas -= 1;
+            boolean ganaAtaque = atacante.ataque(defensor);
+            if (ganaAtaque) {
+                defensor.vidas--;
+                System.out.println("Atacante ataca con éxito.");
             } else {
-                atacante.vidas -= 1;
+                atacante.vidas--;
+                System.out.println("Defensor esquiva el ataque.");
             }
 
+            // Verificar si alguien murió tras ataque
             if (defensor.vidas <= 0) {
-                atacante.experiencia += 1;
-                atacante.batallasGanadas += 1;
+                atacante.experiencia++;
+                atacante.batallasGanadas++;
                 mensaje = "Ganó el atacante";
+                System.out.println("Defensor ha caído.");
                 break;
             } else if (atacante.vidas <= 0) {
-                defensor.experiencia += 1;
-                defensor.batallasGanadas += 1;
+                defensor.experiencia++;
+                defensor.batallasGanadas++;
                 mensaje = "Ganó el defensor";
+                System.out.println("Atacante ha caído.");
                 break;
             }
 
-            int defensa = atacante.defensa(defensor);
-            if (defensa < 0) {
-                atacante.defensa += defensa;
+            // Defensa
+            int defensaResultado = atacante.defensa(defensor);
+            if (defensaResultado < 0) {
+                atacante.defensa += defensaResultado;
+                System.out.println("Defensor redujo la defensa de atacante" +
+                                   " en " + (-defensaResultado) + " puntos. Defensa actual: " + atacante.defensa);
                 if (atacante.defensa <= 0) {
-                    atacante.vidas -= 1;
+                    atacante.vidas--;
                     atacante.defensa = 0;
+                    System.out.println("Atacante ha perdido una vida por quedarse sin defensa.");
                 }
+            } else {
+                System.out.println("Atacante bloqueó el ataque con éxito.");
             }
 
+            // Verificar nuevamente vidas
             if (atacante.vidas <= 0) {
-                defensor.experiencia += 1;
-                defensor.batallasGanadas += 1;
+                defensor.experiencia++;
+                defensor.batallasGanadas++;
                 mensaje = "Ganó el defensor";
+                System.out.println("Atacante ha caído.");
                 break;
             } else if (defensor.vidas <= 0) {
-                atacante.experiencia += 1;
-                atacante.batallasGanadas += 1;
+                atacante.experiencia++;
+                atacante.batallasGanadas++;
                 mensaje = "Ganó el atacante";
+                System.out.println("Defensor ha caído.");
                 break;
             }
 
-            System.out.println("Ataque y defensa hechos");
-            System.out.print("¿Desea seguir haciéndolos competir? (S/N): ");
+            // Mostrar estado
+            System.out.println("Atacante" + " -> Vidas: " + atacante.vidas + ", Defensa: " + atacante.defensa);
+            System.out.println("Defensor" + " -> Vidas: " + defensor.vidas + ", Defensa: " + defensor.defensa);
+
+            // Continuar pelea
+            System.out.print("¿Desea continuar el combate? (S/N): ");
             opcion = sc.nextLine().toUpperCase().charAt(0);
+
+            ronda++;
 
         } while (opcion == 'S');
 
+        if (mensaje.equals("")) {
+            mensaje = "El combate terminó sin un vencedor.";
+        }
+
         return mensaje;
     }
+
 }
 
 
